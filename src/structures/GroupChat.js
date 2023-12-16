@@ -328,6 +328,29 @@ class GroupChat extends Chat {
     }
 
     /**
+     * Updates the group settings to only allow admins to edit group info (title, description, photo).
+     * @param {float} [time] Time of ephemeral
+     * @returns {Promise<boolean>} Returns true if the setting was properly updated. This can return false if the user does not have the necessary permissions.
+     */
+    async setEphemaralGroupProperty(time) {
+        const success = await this.client.pupPage.evaluate(async (chatId, time) => {
+            const chatWid = window.Store.WidFactory.createWid(chatId);
+            try {
+                await window.Store.GroupUtils.setGroupProperty(chatWid, 'ephemeral', time);
+                return true;
+            } catch (err) {
+                if(err.name === 'ServerStatusCodeError') return false;
+                throw err;
+            }
+        }, this.id._serialized, time);
+
+        if(!success) return false;
+        
+        this.groupMetadata.ephemeral = time;
+        return true;
+    }
+
+    /**
      * Deletes the group's picture.
      * @returns {Promise<boolean>} Returns true if the picture was properly deleted. This can return false if the user does not have the necessary permissions.
      */
