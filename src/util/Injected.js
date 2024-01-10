@@ -267,7 +267,7 @@ exports.LoadUtils = () => {
             delete options.linkPreview;
             const link = window.Store.Validators.findLink(content);
             if (link) {
-                await window.Store.LinkPreview.clearPreviewCache();
+                await window.Store.clearPreviewCache();
                 let preview = await window.Store.LinkPreview.getLinkPreview(link);
                 if (preview && preview.data) {
                     preview = preview.data;
