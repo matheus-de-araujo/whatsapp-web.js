@@ -51,6 +51,7 @@ exports.ExposeStore = (moduleRaidStr) => {
     window.Store.MsgActionChecks = window.mR.findModule('canSenderRevokeMsg')[0];
     window.Store.QuotedMsg = window.mR.findModule('getQuotedMsgObj')[0];
     window.Store.LinkPreview = window.mR.findModule('getLinkPreview')[0];
+    window.Store.LinkPreview = window.mR.findModule('clearPreviewCache')[0];
     window.Store.Socket = window.mR.findModule('deprecatedSendIq')[0];
     window.Store.SocketWap = window.mR.findModule('wap')[0];
     window.Store.SearchContext = window.mR.findModule('getSearchContext')[0].getSearchContext;
@@ -266,6 +267,7 @@ exports.LoadUtils = () => {
             delete options.linkPreview;
             const link = window.Store.Validators.findLink(content);
             if (link) {
+                await window.Store.LinkPreview.clearPreviewCache();
                 let preview = await window.Store.LinkPreview.getLinkPreview(link);
                 if (preview && preview.data) {
                     preview = preview.data;
